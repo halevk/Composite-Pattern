@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -10,21 +11,52 @@ namespace CompositePattern
     {
         static void Main(string[] args)
         {
-            var com = new Computer();
+            
+            var computer=new Computer(){ Name = "Asus KJ51"};
 
-            var mb = new MotherBoard("abc mother board", 500);
-            var rm = new Ram("2048 Mb ram", 300);
-            var hdd = new HDD("256 GB HDD", 500);
-            var cpu = new CPU("intel i7 ", 500);
+            var board = new MotherBoard() {Name = "ASX 1254 board", Price = 500};
 
-            mb.Add(rm);
-            mb.Add(hdd);
-            mb.Add(cpu);
+            board.Add(new Ram(){Name = "Kingston 2048 mb ram", Price = 240.5m});
+            board.Add(new Hdd(){Name = "Kingstone 250 Gb SSD", Price = 350});
 
-            com.Add(mb);
+            computer.Add(board);
 
-            Console.WriteLine(com.Price);
+            var price = computer.GetPrice();
 
+            Console.WriteLine(string.Format("Total:{0} $", price));
+            Console.ReadLine();
         }
     }
+
+
+    public class Computer : ContainerBase
+    {
+        public override decimal GetPrice()
+        {
+            return base.Components.Sum(i => i.GetPrice()) + this.Price;
+        }
+    }
+
+    public class MotherBoard : ContainerBase
+    {
+        public override decimal GetPrice()
+        {
+            return base.Components.Sum(o => o.GetPrice()) + this.Price;
+        }
+    }
+
+    public class Ram : ComponentBase
+    {
+        
+    }
+
+
+    public class Hdd : ComponentBase
+    {
+        
+    }
+
+
+    
+
 }
